@@ -1,11 +1,10 @@
 <script>
-	export let name;
+	import Sentence from './routes/Sentence.svelte';
+	export let appName;
 </script>
 
 <style>
-	h1 {
-		color: purple;
-	}
 </style>
 
-<h1>Hello {name}!</h1>
+<h1>{appName}</h1>
+<Sentence/>
