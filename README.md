@@ -1,5 +1,4 @@
-*This is based on a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.
-*
+*This is based on a project template for [Svelte](https://svelte.dev) apps. It lives at https://github.com/sveltejs/template.*
 
 ---
 
