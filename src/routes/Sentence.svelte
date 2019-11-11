@@ -14,9 +14,16 @@
 <style>
     #wordContainer {
         /* position: relative; */
-        width: 900px;
         display: flex;
         flex-wrap: wrap;
+        min-width: 100px;
+        max-width: 500px;
+    }
+    #wordContainer .item {
+        flex-basis: auto;
+        background-color: lightblue;
+        margin: 0px 0px 12px 0px;
+        padding: 0px 10px 0px 10px;
     }
 </style>
 
@@ -24,9 +31,9 @@
 <div id="wordContainer">
     {#each theWords as aWord, i}
         {#if i < (theWords.length - 1)}
-            <div>{aWord}</div>&nbsp;-&nbsp;
+            <div class="item">{aWord}</div>&nbsp;-&nbsp;
         {:else}
-            <div>{aWord}</div>
+            <div class="item">{aWord}</div>
         {/if}
     {/each}
 </div>
