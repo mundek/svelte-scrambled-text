@@ -19,6 +19,7 @@
         })
         sortable.on('sortable:stop', () => {
             console.log('sortable:stop')
+            currentSentence();
         })
     });
 
@@ -32,44 +33,32 @@
     } from '../utils/word-work.js';
 
     let theWords = sentenceWords($sentence);
+
+    function currentSentence() {
+        console.log("currSent");
+    }
 </script>
 
 <style>
-    /* #wordContainer {
-        position: relative;
-        display: flex;
-        flex-wrap: wrap;
-        min-width: 100px;
-        max-width: 500px;
-    }
+	#wordContainer {
+		min-width: 100px;
+		max-width: 650px;
+	}
 
-    #wordContainer .item {
-        flex-basis: auto;
-        background-color: lightblue;
-        margin: 0px 0px 12px 0px;
-        padding: 0px 10px 0px 10px;
-    }
-     */
-
-    #wordContainer {
-        min-width: 100px;
-        max-width: 500px;
-    }
-
-    #wordContainer>div {
+	#wordContainer>div {
 		display: inline-block;
-		margin: 0px;
-		padding: 6px 0px 6px 0px;
+		margin: 3px 3px;
+		padding: 3px 3px 12px 3px;
 		color: red;
 		font-size: 1em;
-        background-color: chartreuse;
-        cursor: pointer;
+		background-color: chartreuse;
+
+		cursor: pointer;
 		/* text-shadow: 0 0 20px rgba(0,0,0,0.3); */
 	}
 
 	:global(.draggable-source--is-dragging) {
 		visibility: hidden;
-        cursor: grabbing;
 	}
 </style>
 
@@ -77,7 +66,8 @@
 <div id="wordContainer">
     {#each theWords as aWord, i}
         {#if i < (theWords.length - 1)}
-            <div class="item">{aWord}&nbsp;-&nbsp;</div>
+            <!-- <div class="item">{aWord}&nbsp;-&nbsp;</div> -->
+            <div class="item">{aWord}</div>
         {:else}
             <div class="item">{aWord}</div>
         {/if}
