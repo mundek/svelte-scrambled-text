@@ -32,7 +32,7 @@
         sentenceWords
     } from '../utils/word-work.js';
 
-    let theWords = sentenceWords($sentence);
+    let theWords = sentenceWords($sentence, 'separate');
 
     function currentSentence() {
         console.log("currSent");
@@ -63,13 +63,17 @@
 </style>
 
 <p>{$sentence}</p>
-<div id="wordContainer">
-    {#each theWords as aWord, i}
-        {#if i < (theWords.length - 1)}
-            <!-- <div class="item">{aWord}&nbsp;-&nbsp;</div> -->
-            <div class="item">{aWord}</div>
-        {:else}
-            <div class="item">{aWord}</div>
-        {/if}
-    {/each}
-</div>
+{#if theWords !== -1}
+    <div id="wordContainer">
+        {#each theWords as aWord, i}
+            {#if i < (theWords.length - 1)}
+                <!-- <div class="item">{aWord}&nbsp;-&nbsp;</div> -->
+                <div class="item" id="{i}">{aWord}</div>
+            {:else}
+                <div class="item" id="{i}">{aWord}</div>
+            {/if}
+        {/each}
+    </div>
+{:else}
+    <h2>TEXT PARAMETER ERROR!</h2>
+{/if}
