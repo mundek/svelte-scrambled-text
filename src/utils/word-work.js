@@ -18,3 +18,35 @@ export function sentenceWords(aSentence, retainPunctuation) {
         return -1;
     }
 }
+
+export function wordsToString(anArray) {
+    console.log(anArray.constructor.name);
+
+    let aTextString = "";
+    anArray.forEach((element, index) => {
+        if(element.innerText) {
+            element = element.innerText;
+        }
+        console.log(element);
+        if (index > 0 && !element.match(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"")) {
+            aTextString = aTextString + (" " + element);
+        } else {
+            aTextString = aTextString + element;
+        }
+    });
+    return aTextString;
+}
+
+export function wordsScrambled(anArray) {
+    return true;
+}
+
+// internal utility function
+function isNodeList(nodes) {
+    var stringRepr = Object.prototype.toString.call(nodes);
+
+    return typeof nodes === 'object' &&
+        /^\[object (HTMLCollection|NodeList|Object)\]$/.test(stringRepr) &&
+        nodes.hasOwnProperty('length') &&
+        (nodes.length === 0 || (typeof nodes[0] === "object" && nodes[0].nodeType > 0));
+}

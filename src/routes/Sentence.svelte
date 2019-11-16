@@ -1,5 +1,9 @@
 <script>
-    import { onMount } from 'svelte';
+    // svelte-provided lifecycle hooks
+    // onMount enables attaching draggable/sortable behavior to wordContainer element's children
+    // tick enables awaiting DOM update of wordContainer element's children after completion of drag-and-drop action
+    import { onMount, tick } from 'svelte';
+    // Shopify's Draggable module(s) to enable draggability/sortability of wordContainer element's children
     import Draggable from '@shopify/draggable';
 
     onMount(() => {
@@ -19,38 +23,60 @@
         })
         sortable.on('sortable:stop', () => {
             console.log('sortable:stop')
-            currentSentence();
+            parseCurrentSentence();
         })
     });
 
+    // import svelte store
     import {
         sentence,
-        currentResponse
+        currentResponse,
+        wordsScrambled
     } from '../stores/quiz-store.js';
 
+    // import word-parsing utility functions(s)
     import {
-        sentenceWords
+        sentenceWords,
+        wordsToString
     } from '../utils/word-work.js';
 
-    let theWords = sentenceWords($sentence, 'separate');
+    // set parsing mode constant for following call to sentenceWords()
+    const PUNCT = 'strip';
+    // parse sentence into words (and punctuation)
+    // sentenceWords(String, '[strip|retain|separate]'')
+    let theWords = sentenceWords($sentence, PUNCT);
+    let referenceSentence = wordsToString(theWords);
 
-    function currentSentence() {
-        console.log("currSent");
+    // set an internal string for parsing the user's latest arrangement of words/punctuation
+    $: parsedSentence = $currentResponse;
+
+    // parseCurrentSentence() is async to await any update(s) ('tick()') of DOM before selecting parent (#wordContainer) element's children
+    // iterate through current arrangement of 'draggable' elements to construct a String for comparison with the original (parsed) sentence
+    async function parseCurrentSentence() {
+        console.log("parseCurrentSentence");
+        await tick();
+        let c = document.querySelectorAll(".textTile");
+        console.log(c.constructor.name)
+
+        // word-work.js utility function takes element.innerText values of draggable elements and concatenates them into a string with some implementation of punctuation sensitive whitespace additions
+        $currentResponse = wordsToString(Array.from(c));
+        // console.log(parsedSentence);
     }
 </script>
 
 <style>
 	#wordContainer {
 		min-width: 100px;
-		max-width: 650px;
+		max-width: 750px;
 	}
 
-	#wordContainer>div {
+	.textTile {
 		display: inline-block;
 		margin: 3px 3px;
 		padding: 3px 3px 12px 3px;
 		color: red;
-		font-size: 1em;
+		font-size: 1.5em;
+        font-family: "Lucida Console", Monaco, monospace;
 		background-color: chartreuse;
 
 		cursor: pointer;
@@ -62,18 +88,22 @@
 	}
 </style>
 
-<p>{$sentence}</p>
+<p>ORIGINAL: <em>{$sentence}</em></p>
+<p>REFERENCE: <em>{referenceSentence}</em></p>
+<p>CURRENT: <em>{parsedSentence}</em></p>
+
 {#if theWords !== -1}
     <div id="wordContainer">
         {#each theWords as aWord, i}
-            {#if i < (theWords.length - 1)}
-                <!-- <div class="item">{aWord}&nbsp;-&nbsp;</div> -->
-                <div class="item" id="{i}">{aWord}</div>
-            {:else}
-                <div class="item" id="{i}">{aWord}</div>
-            {/if}
+            <div class="textTile" id="{i}">{aWord}</div>
         {/each}
     </div>
 {:else}
     <h2>TEXT PARAMETER ERROR!</h2>
+{/if}
+
+{#if referenceSentence === parsedSentence}
+    <p>(referenceSentence === parsedSentence) --> TRUE</p>
+{:else}
+    <p>(referenceSentence === parsedSentence) --> FALSE</p>
 {/if}
