@@ -9,57 +9,59 @@
     onMount(() => {
         const sortable = new Draggable.Sortable(
             document.querySelector('#wordContainer'), {
-                draggable: 'div',
+                draggable: '.textTile',
             }
         );
         sortable.on('sortable:start', () => {
-            console.log('sortable:start')
+            // console.log('sortable:start')
         })
         sortable.on('sortable:sort', () => {
-            console.log('sortable:sort')
+            // console.log('sortable:sort')
         })
         sortable.on('sortable:sorted', () => {
-            console.log('sortable:sorted')
+            // console.log('sortable:sorted')
         })
         sortable.on('sortable:stop', () => {
-            console.log('sortable:stop')
+            // console.log('sortable:stop')
+            // after user drops draggable element, update quiz-store.js 
             parseCurrentSentence();
         })
     });
 
     // import svelte store
     import {
-        sentence,
-        currentResponse,
-        wordsScrambled
+        sentence
     } from '../stores/quiz-store.js';
 
     // import word-parsing utility functions(s)
     import {
         sentenceWords,
-        wordsToString
+        wordsToString,
+        wordsScrambled
     } from '../utils/word-work.js';
 
     // set parsing mode constant for following call to sentenceWords()
-    const PUNCT = 'strip';
+    const PUNCT = 'separate';
     // parse sentence into words (and punctuation)
     // sentenceWords(String, '[strip|retain|separate]'')
     let theWords = sentenceWords($sentence, PUNCT);
+    // 
+    let currentResponse = wordsToString(theWords); 
     let referenceSentence = wordsToString(theWords);
+    theWords = wordsScrambled(theWords);
 
     // set an internal string for parsing the user's latest arrangement of words/punctuation
-    $: parsedSentence = $currentResponse;
-
-    // parseCurrentSentence() is async to await any update(s) ('tick()') of DOM before selecting parent (#wordContainer) element's children
+ 
+    // parseCurrentSentence() is async to await any update(s) ('await tick()') of DOM before selecting parent (#wordContainer) element's children
     // iterate through current arrangement of 'draggable' elements to construct a String for comparison with the original (parsed) sentence
     async function parseCurrentSentence() {
-        console.log("parseCurrentSentence");
+        // console.log("parseCurrentSentence");
         await tick();
         let c = document.querySelectorAll(".textTile");
-        console.log(c.constructor.name)
+        // console.log(c.constructor.name)
 
-        // word-work.js utility function takes element.innerText values of draggable elements and concatenates them into a string with some implementation of punctuation sensitive whitespace additions
-        $currentResponse = wordsToString(Array.from(c));
+        // word-work.js utility function takes element.innerText values of draggable elements and concatenates them into a string (with some implementation of punctuation sensitive whitespace additions)
+        currentResponse = wordsToString(Array.from(c));
         // console.log(parsedSentence);
     }
 </script>
@@ -68,6 +70,7 @@
 	#wordContainer {
 		min-width: 100px;
 		max-width: 750px;
+        user-select: none;
 	}
 
 	.textTile {
@@ -88,9 +91,9 @@
 	}
 </style>
 
-<p>ORIGINAL: <em>{$sentence}</em></p>
-<p>REFERENCE: <em>{referenceSentence}</em></p>
-<p>CURRENT: <em>{parsedSentence}</em></p>
+<!-- <p>ORIGINAL: <em>{$sentence}</em></p> -->
+<!-- <p>REFERENCE: <em>{referenceSentence}</em></p> -->
+<!-- <p>CURRENT: <em>{currentResponse}</em></p> -->
 
 {#if theWords !== -1}
     <div id="wordContainer">
@@ -102,8 +105,8 @@
     <h2>TEXT PARAMETER ERROR!</h2>
 {/if}
 
-{#if referenceSentence === parsedSentence}
-    <p>(referenceSentence === parsedSentence) --> TRUE</p>
+{#if referenceSentence === currentResponse}
+    <p>(referenceSentence === currentResponse) --> TRUE</p>
 {:else}
-    <p>(referenceSentence === parsedSentence) --> FALSE</p>
+    <p>(referenceSentence === currentResponse) --> FALSE</p>
 {/if}

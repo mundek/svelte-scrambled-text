@@ -1,52 +1,57 @@
 export function sentenceWords(aSentence, retainPunctuation) {
     let onlyLetters = "";
+    // the following conditions allow for some consideration of punctuation
     if(retainPunctuation === 'strip') {
+        // STRIP: remove a wide range of common punctuation (excludes apostrophe)
         // regex from https://stackoverflow.com/questions/4328500/how-can-i-strip-all-punctuation-from-a-string-in-javascript-using-regex
         onlyLetters = aSentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
         // regex to replace multiple whitespace characters with a single space
         onlyLetters = onlyLetters.replace(/\s{2,}/g," ");
         return onlyLetters.split(" ");
+
     } else if (retainPunctuation == 'retain') {
-        // regex to replace multiple whitespace characters with a single space
+        // RETAIN: keep punctuation where found in the aSentence
+        // use regex to replace multiple whitespace characters with a single space
         onlyLetters = aSentence.replace(/\s{2,}/g," ");
         return onlyLetters.split(" ");
+
     } else if (retainPunctuation == 'separate') {
-        // regex to replace multiple whitespace characters with a single space
+        // SEPARATE: use regex to replace multiple whitespace characters with a single space
         onlyLetters = aSentence.replace(/([.,\/#!$%\^&\*;:{}=\-_`~()])/g," \$1");
         return onlyLetters.split(" ");
+
     } else {
+        // retainPunctuation flag not set; return -1
         return -1;
     }
 }
 
 export function wordsToString(anArray) {
-    console.log(anArray.constructor.name);
-
     let aTextString = "";
     anArray.forEach((element, index) => {
+        // Not all arrays are created equal?
+        // check for Array elements with innerText property; reassign element that value if true
         if(element.innerText) {
             element = element.innerText;
         }
-        console.log(element);
+        // console.log(element);
         if (index > 0 && !element.match(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"")) {
             aTextString = aTextString + (" " + element);
         } else {
             aTextString = aTextString + element;
         }
     });
+    // console.log(aTextString);
     return aTextString;
 }
 
 export function wordsScrambled(anArray) {
-    return true;
-}
-
-// internal utility function
-function isNodeList(nodes) {
-    var stringRepr = Object.prototype.toString.call(nodes);
-
-    return typeof nodes === 'object' &&
-        /^\[object (HTMLCollection|NodeList|Object)\]$/.test(stringRepr) &&
-        nodes.hasOwnProperty('length') &&
-        (nodes.length === 0 || (typeof nodes[0] === "object" && nodes[0].nodeType > 0));
+    // Array randomization code from https://medium.com/@nitinpatel_20236/how-to-shuffle-correctly-shuffle-an-array-in-javascript-15ea3f84bfb
+    for(let i = anArray.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * i)
+        const temp = anArray[i]
+        anArray[i] = anArray[j]
+        anArray[j] = temp
+    }
+    return anArray;
 }
