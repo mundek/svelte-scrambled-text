@@ -2,22 +2,23 @@ export function sentenceWords(aSentence, retainPunctuation) {
     let onlyLetters = "";
     // the following conditions allow for some consideration of punctuation
     if(retainPunctuation === 'strip') {
-        // STRIP: remove a wide range of common punctuation (excludes apostrophe)
-        // regex from https://stackoverflow.com/questions/4328500/how-can-i-strip-all-punctuation-from-a-string-in-javascript-using-regex
-        onlyLetters = aSentence.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+        // STRIP: remove a wide range of common punctuation (excludes apostrophe) from sentence/phrase
+        // regex adapted from https://stackoverflow.com/questions/4328500/how-can-i-strip-all-punctuation-from-a-string-in-javascript-using-regex
+        onlyLetters = aSentence.replace(/[.,\/#\?!$%\^&\*;:{}=\-_`~()]/g,"");
         // regex to replace multiple whitespace characters with a single space
         onlyLetters = onlyLetters.replace(/\s{2,}/g," ");
         return onlyLetters.split(" ");
 
-    } else if (retainPunctuation == 'retain') {
+    } else if (retainPunctuation === 'retain') {
         // RETAIN: keep punctuation where found in the aSentence
         // use regex to replace multiple whitespace characters with a single space
         onlyLetters = aSentence.replace(/\s{2,}/g," ");
         return onlyLetters.split(" ");
 
-    } else if (retainPunctuation == 'separate') {
-        // SEPARATE: use regex to replace multiple whitespace characters with a single space
-        onlyLetters = aSentence.replace(/([.,\/#!$%\^&\*;:{}=\-_`~()])/g," \$1");
+    } else if (retainPunctuation === 'separate') {
+        // SEPARATE: include a wide range of common punctuation (excludes apostrophe) as 'words' when splitting the sentence/phrase 
+        // regex adapted from https://stackoverflow.com/questions/4328500/how-can-i-strip-all-punctuation-from-a-string-in-javascript-using-regex
+        onlyLetters = aSentence.replace(/([.,\/#\?!$%\^&\*;:{}=\-_`~()])/g," \$1");
         return onlyLetters.split(" ");
 
     } else {

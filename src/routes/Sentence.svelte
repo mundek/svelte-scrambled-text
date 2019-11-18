@@ -46,7 +46,7 @@
 
     // set parsing mode constant for following call to sentenceWords()
     // ???: Link to store/state later? (too global?) Make it an attribute associated with questions/question sets?
-    const PUNCT = 'retain';
+    const PUNCT = 'separate';
 
     let theWords = sentenceWords($sentence, PUNCT);
     let referenceSentence = wordsToString(theWords);
