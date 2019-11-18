@@ -46,12 +46,14 @@ export function wordsToString(anArray) {
 }
 
 export function wordsScrambled(anArray) {
+    // local newArray avoids changing original array, which will have been passed as a reference
+    let newArray = anArray.slice();
     // Array randomization code from https://medium.com/@nitinpatel_20236/how-to-shuffle-correctly-shuffle-an-array-in-javascript-15ea3f84bfb
-    for(let i = anArray.length - 1; i > 0; i--){
+    for(let i = newArray.length - 1; i > 0; i--){
         const j = Math.floor(Math.random() * i)
-        const temp = anArray[i]
-        anArray[i] = anArray[j]
-        anArray[j] = temp
+        const temp = newArray[i];
+        newArray[i] = newArray[j];
+        newArray[j] = temp;
     }
-    return anArray;
+    return newArray;
 }
